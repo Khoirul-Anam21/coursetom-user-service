@@ -1,10 +1,9 @@
 import { Router } from "express";
 
-const router = Router();
+const userRouter = Router();
 
-router.get('/user', (req, res, next)=>{
-    res.send({name: 'Anam'})
-});
+userRouter.use('/auth')
+userRouter.use('/learning')
+userRouter.use('/student')
 
-
-export default router;
+export default userRouter;
