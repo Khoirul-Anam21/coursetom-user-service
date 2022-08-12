@@ -4,6 +4,8 @@ const errorHandler = require("./error_handler");
 const router = require("./routes");
 const cors = require("cors");
 
+require('dotenv').config()
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
