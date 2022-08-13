@@ -5,16 +5,25 @@ class UserController {
     }
   }
 
-  auth(req, res, next) {
-    throw new Error("Method 'say()' must be implemented.");
-    // return {
-    //   signIn() {
-        
-    //   },
-    //   signUp() {
-    //     throw new Error("Method 'say()' must be implemented.");
-    //   },
-    // };
+  auth() {
+    return {
+      async signIn(req, res, next) {
+        try {
+          const { email, password } = req.body;
+          // code here
+        } catch (error) {
+          next(error)
+        }
+      },
+      async signUp(req, res, next) {
+        try {
+          const { email, name, password } = req.body;
+          // code here
+        } catch (error) {
+          next(error)
+        }
+      },
+    };
   }
   
 }

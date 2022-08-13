@@ -1,16 +1,10 @@
-
+const UserController = require('./user_base')
 
 class StudentController extends UserController {
-  auth(req, res, next) {
-    return {
-      signIn() {
-        console.log("sign in");
-      },
-      signUp() {
-        console.log("sign up");
-      },
-    };
+  constructor(req, res, next) {
+    super()
   }
+
 }
 
 module.exports = StudentController
