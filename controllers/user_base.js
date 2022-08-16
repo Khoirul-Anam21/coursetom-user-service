@@ -12,7 +12,7 @@ class UserController {
           const { email, password } = req.body;
           // code here
         } catch (error) {
-          next(error)
+          next(error);
         }
       },
       async signUp(req, res, next) {
@@ -20,12 +20,11 @@ class UserController {
           const { email, name, password } = req.body;
           // code here
         } catch (error) {
-          next(error)
+          next(error);
         }
       },
     };
   }
-  
 }
 
-module.exports = UserController
+module.exports = UserController;
