@@ -2,7 +2,7 @@ const UserController = require("./user_base");
 
 class StudentController extends UserController {
   constructor() {
-    super();
+    super('student');
   }
 
   getBio(req, res, next) {
