@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   StudentProgress.init({
     studentBioId: DataTypes.INTEGER,
-    courseId: DataTypes.INTEGER,
+    courseInfo: DataTypes.ARRAY(DataTypes.STRING),
     status: DataTypes.STRING
   }, {
     sequelize,

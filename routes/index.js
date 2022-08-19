@@ -4,5 +4,6 @@ const userRouter = require('express').Router();
 userRouter.use('/auth', authRouter) 
 // userRouter.use('/learning')
 // userRouter.use('/student')
+// userRouter.use('/admin')
 
 module.exports = userRouter;

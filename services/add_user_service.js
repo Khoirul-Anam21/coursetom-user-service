@@ -1,6 +1,8 @@
-const { User, StudentBio, AdminBio } = require("../models");
+const sequelize = require("sequelize");
+const { User, StudentBio, AdminBio, Sequelize } = require("../models");
 
 const addUser = async (user) => {
+  // TODO: Use Sequelize Transaction
   const createdUser = await User.create({
     ...user,
     createdAt: new Date(),

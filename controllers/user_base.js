@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const addUser = require("../services/add_user_service");
 const Cryptr = require("cryptr");
-const cryptr = new Cryptr('coursetom');
+const cryptr = new Cryptr("coursetom");
 class UserController {
   constructor(role) {
     this.role = role;
@@ -26,20 +26,21 @@ class UserController {
       async signUp(req, res, next) {
         try {
           const { name, email, password } = req.body;
-          const hashedFields = [
+          const salt = bcrypt.genSaltSync(10);
+          const hashedFields = {
             name,
-            cryptr.encrypt(email),
-            cryptr.encrypt(password),
+            email,
+            password,
             role,
-          ];
-          const generatedLink = hashedFields.join("-");
+          };
+          const tokenizedData = jwt.sign(hashedFields, process.env.VERIF_KEY);
           const emailNotifier = await sendEmail(
             process.env.SMTP_USERNAME,
             email,
             "Confirm Your Account",
             `
             Clink this link below to verify your account
-            https://localhost:3000/auth/verif-email-student/${generatedLink}
+            https://localhost:3000/auth/verif-email-student/${tokenizedData}
           `,
             null
           );
@@ -51,18 +52,13 @@ class UserController {
       async createAccount(req, res, next) {
         try {
           const { credential } = req.params;
-          const { email } = req.body;
-          const [name, hashedEmail, hashedPassword, role] =
-            credential.split("-");
-          if (cryptr.decrypt(hashedEmail) !== email)
-            throw {
-              status: 401,
-              message: "Invalid email",
-            };
+          // const { userEmail } = req.body;
+          const { name, email, password, role } =
+            jwt.decode(credential);
           const userCreated = await addUser({
             email,
             name,
-            hashedPassword,
+            password,
             role,
           });
           res.status(201).json(userCreated);

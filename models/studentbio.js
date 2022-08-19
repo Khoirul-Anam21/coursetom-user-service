@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   StudentBio.init({
     userId: DataTypes.INTEGER,
-    progressId: DataTypes.INTEGER,
     phoneNumber: DataTypes.STRING,
-    address: DataTypes.STRING
+    address: DataTypes.STRING,
+    profilePict: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'StudentBio',
