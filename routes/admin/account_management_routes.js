@@ -1,6 +1,10 @@
-const accountRoute = require('express').Router();
+const AdminController = require('../../controllers/admin');
 
-accountRoute.get('/students') // tambah query
-accountRoute.put('/bio') // update biodata
+const accountMngmntRoute = require('express').Router();
 
-module.exports = accountRoute;
+const adminController = new AdminController();
+
+accountMngmntRoute.get('/students', adminController.getStudents) // tambah query
+accountMngmntRoute.put('/bio', adminController.updateBio) // update biodata
+
+module.exports = accountMngmntRoute;
