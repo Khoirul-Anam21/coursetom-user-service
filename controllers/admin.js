@@ -1,4 +1,4 @@
-const { StudentBio, User } = require("../models");
+const { StudentBio, User, AdminBio } = require("../models");
 const UserController = require("./user_base");
 const { Op } = require("sequelize");
 class AdminController extends UserController {
@@ -32,7 +32,32 @@ class AdminController extends UserController {
     }
   }
 
-  async updateBio(req, res, next) {}
+  async updateBio(req, res, next) {
+    try {
+      const { name, phoneNumber, position, address } = req.body;
+      // const id  = 1; //tes
+      const { id } = req.user 
+      if (name) {
+        await User.update({ name }, { where: { id } });
+      }
+      if (phoneNumber || position || address ) {
+        await AdminBio.update(
+          { phoneNumber, position, address },
+          {
+            where: {
+              userId: id,
+            },
+          }
+        );
+      }
+      return res.json({
+        message: 'Succesfully updated biodata'
+      })
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }
 
 module.exports = AdminController;

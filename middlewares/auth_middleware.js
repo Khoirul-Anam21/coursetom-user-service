@@ -1,9 +1,13 @@
 const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
+module.exports = (req, _res, next) => {
   try {
+    if (!req.headers.authorization ) throw {
+      status: 401,
+      message: "Token is invalid or not provided",
+    };
     const token = req.headers.authorization.split(" ")[1];
-    if (!req.headers.authorization || !token) {
+    if (!token) {
       throw {
         status: 401,
         message: "Token is invalid or not provided",

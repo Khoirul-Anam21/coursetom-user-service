@@ -1,9 +1,8 @@
 const sendEmail = require("../services/email_service");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const addUser = require("../services/add_user_service");
-const Cryptr = require("cryptr");
-const cryptr = new Cryptr("coursetom");
+const { User, AdminBio, StudentBio } = require("../models");
+const bcrypt = require("bcryptjs");
 class UserController {
   constructor(role) {
     this.role = role;
@@ -18,7 +17,30 @@ class UserController {
       async signIn(req, res, next) {
         try {
           const { email, password } = req.body;
-          // code here
+          const user = await User.findOne({
+            where: {
+              email,
+            },
+          });
+          
+          if(!user) return res.status(401).json({
+            message: "Invalid email or password"
+          })
+
+          if (bcrypt.compareSync(password, user.password)) {
+            const token = jwt.sign({
+              id: user.id,
+              email: user.email,
+            }, process.env.VERIF_KEY);
+            return res.send({
+              message: "Sign In Success",
+              token,
+            });
+          }
+
+          return res.status(401).json({
+            message: "Invalid email or password"
+          })
         } catch (error) {
           next(error);
         }
@@ -53,8 +75,7 @@ class UserController {
         try {
           const { credential } = req.params;
           // const { userEmail } = req.body;
-          const { name, email, password, role } =
-            jwt.decode(credential);
+          const { name, email, password, role } = jwt.decode(credential);
           const userCreated = await addUser({
             email,
             name,
@@ -67,6 +88,47 @@ class UserController {
         }
       },
     };
+  }
+
+  getBio() {
+    return {
+      getBioAdmin: this.#getBioAdmin,
+      getBioStudent: this.#getBioStudent,
+    };
+  }
+
+  async #getBioAdmin(req, res, next) {
+    const { id } = req.user;
+    try {
+      const biodata = await AdminBio.findOne({
+        where: {
+          userId: id,
+        },
+        include: {
+          model: User,
+        },
+      });
+      res.send(biodata);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async #getBioStudent(req, res, next) {
+    const { id } = req.user;
+    try {
+      const biodata = await StudentBio.findOne({
+        where: {
+          userId: id,
+        },
+        include: {
+          model: User,
+        },
+      });
+      res.send(biodata);
+    } catch (error) {
+      next(error);
+    }
   }
 }
 
