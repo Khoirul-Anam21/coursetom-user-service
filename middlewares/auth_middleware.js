@@ -13,8 +13,9 @@ module.exports = (req, _res, next) => {
         message: "Token is invalid or not provided",
       };
     }
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.VERIF_KEY, (err, decoded) => {
       if (err) {
+      console.log(err)
         throw {
           status: 401,
           message: "Token invalid",
