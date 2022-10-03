@@ -1,12 +1,32 @@
 const UserController = require("./user_base");
+const { User, StudentBio } = require("../models");
 
 class StudentController extends UserController {
   constructor() {
     super('student');
   }
 
-  getBio(req, res, next) {
+  async getBio(req, res, next) {
     try {
+      const { id } = req.user;
+      const student = await StudentBio.findOne({
+        where: {
+          userId: id,
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['name', 'email', 'role']
+          }
+        ]
+      })
+      if (!student) throw res.status(404).json({
+        message: "data not found"
+      })
+      res.status(200).json({
+        message: "success",
+        data: student,
+      })
     } catch (error) {
       next(error);
     }
