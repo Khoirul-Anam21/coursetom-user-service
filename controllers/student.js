@@ -32,6 +32,33 @@ class StudentController extends UserController {
     }
   }
 
+
+  async updateBio(req, res, next) {
+    try {
+      const { id } = req.user;
+      const { phoneNumber, address, name, role } = req.body;
+      
+      const student = await StudentBio.findOne({
+        where: {
+          userId: id,
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['name', 'email', 'role']
+          }
+        ]
+      })
+      if (!student) throw res.status(404).json({
+        message: "data not found"
+      })
+
+
+    } catch (error) {
+      next(error);
+    }
+  }
+
   getOngoingCourses(req, res, next) {}
 
   getCompletedCourses(req, res, next) {}
@@ -44,7 +71,6 @@ class StudentController extends UserController {
 
   getCourseByChapter(req, res, next) {}
 
-  updateBio(req, res, next) {}
 
   updateCurrentProgress(req, res, next) {}
 
